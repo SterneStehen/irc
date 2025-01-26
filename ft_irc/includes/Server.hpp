@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <7353718@gmail.com>               +#+  +:+       +#+        */
+/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:28:49 by smoreron          #+#    #+#             */
-/*   Updated: 2025/01/20 18:28:50 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/01/26 12:50:46 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
-
 
 
 #ifndef SERVER_HPP
@@ -69,7 +68,7 @@ public:
     void            cmdPart(Client &client, std::vector<std::string> &params);
     void            cmdPrivmsg(Client &client, std::vector<std::string> &params);
     void            cmdQuit(Client &client, std::vector<std::string> &params);
-
+	void 			cmdNotice(Client &client, std::vector<std::string> &params);
     // Геттеры/сеттеры/утилиты
     const std::string &getPassword() const;
     const std::string &getServerName() const;
