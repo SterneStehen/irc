@@ -6,12 +6,12 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 14:48:26 by smoreron          #+#    #+#             */
-/*   Updated: 2025/01/26 19:40:19 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:23:43 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "Server.hpp"
-#include "Client.hpp"
+#include "Client.hpp" 
 #include "Channel.hpp"
 #include <iostream>
 #include <stdexcept>
@@ -33,7 +33,7 @@ Server::Server(int port, const std::string &password)
     if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
         throw std::runtime_error("setsockopt() failed");
 
-    // Привязка
+    // Привязка socket + port
     sockaddr_in serv_addr;
     std::memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -177,11 +177,13 @@ void Server::processCommand(Client &client, const std::string &line) {
     // Ищем команду в _commands
     if (_commands.find(command) != _commands.end()) {
         commandFunc func = _commands[command];
+		std::string msg_run = "Server 42 IRC run  "  + command + "\n";
+        send(client.getSocket(), msg_run.c_str(), msg_run.size(), 0);
         // Вызываем соответствующую функцию
         (this->*func)(client, tokens);
     } else {
         // Можно отправить клиенту сообщение об ошибке/неизвестной команде
-        std::string msg = ":server 421 " + client.getNickname() + " " + command + " :Unknown command\r\n";
+        std::string msg = ":server 42  " + client.getNickname() + " " + command + " :Unknown command\r\n";
         send(client.getSocket(), msg.c_str(), msg.size(), 0);
     }
 }
@@ -203,7 +205,6 @@ std::vector<std::string> Server::parseLine(const std::string &line) {
             tokens.push_back(line.substr(i + 1));
             break;
         }
-
         // Иначе копим символы до следующего пробела
         size_t start = i;
         while (i < line.size() && !isspace(line[i]))
